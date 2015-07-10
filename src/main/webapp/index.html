@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Testing page</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="/bookingservice.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#showStatusButton').click(function () {
+                $.ajax({
+                    url: '/webapi/booking/status',
+                    type: 'GET',
+                    success: function (data) {
+                        alert(data);
+                    },
+                    error: function (xhr, status, error) {
+                        alert(xhr.responseText)
+                    }
+                })
+            });
+
+            $('#postBatches').click(function () {
+                $.ajax({
+                    type: 'POST',
+                    contentType: "application/json",
+                    url: '/webapi/booking/process',
+                    /*data: JSON.stringify([new BookingNode(1436279706749,1436279706749,"1",2), new BookingNode(1436279706749,1436279706749,"2",3)]),*/
+                    data: JSON.stringify(new BookingBatch("0900","1730",[new BookingNode("07-07-2015 18:26:00", "07-07-2015 13:00:00", "1", 1), new BookingNode("07-07-2015 18:26:00", "07-07-2015 14:00:00", "2", 2), new BookingNode("07-07-2015 18:26:00", "07-07-2015 08:00:00", "2", 2)])),
+                    dataType: "json",
+                    success: function (data) {
+                        alert(data);
+                    },
+                    error: function (xhr, status, error) {
+                        alert(xhr.responseText)
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<button id="showStatusButton" href="#" onclick="">Show status</button>
+<button id="postBatches" href="#" onclick="">Post Batches</button>
+<!--<form id="postBatches" name="batches" enctype="multipart/form-data">
+    <button id="postBatchesButton">post batches</button>
+</form>-->
+</body>
+</html>
