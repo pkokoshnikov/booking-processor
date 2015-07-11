@@ -20,29 +20,67 @@
             });
 
             $('#postBatches').click(function () {
+
+                var bookingBatch = parseTextArea();
+                console.log(bookingBatch);
                 $.ajax({
                     type: 'POST',
                     contentType: "application/json",
                     url: '/webapi/booking/process',
-                    /*data: JSON.stringify([new BookingNode(1436279706749,1436279706749,"1",2), new BookingNode(1436279706749,1436279706749,"2",3)]),*/
-                    data: JSON.stringify(new BookingBatch("0900","1730",[new BookingNode("07-07-2015 18:26:00", "07-07-2015 13:00:00", "1", 1), new BookingNode("07-07-2015 18:26:00", "07-07-2015 14:00:00", "2", 2), new BookingNode("07-07-2015 18:26:00", "07-07-2015 08:00:00", "2", 2)])),
+                    data: JSON.stringify(bookingBatch),
                     dataType: "json",
                     success: function (data) {
-                        alert(data);
+                        printResult(data);
                     },
                     error: function (xhr, status, error) {
                         alert(xhr.responseText)
                     }
                 });
             });
+
+            function parseTextArea() {
+                var lines = $('#meetingBatch').val().split('\n');
+                var workHours = lines[0].split(' ');
+                var bookingItems = [];
+                for (var i = 1; i < lines.length - 1; i = i + 2) {
+                    firstLine = lines[i].split(' ');
+                    secondLine = lines[i+1].split(' ');
+                    bookingItems.push(new BookingItem(firstLine[0] + ' ' + firstLine[1], secondLine[0] + ' ' + secondLine[1], firstLine[2], parseInt(secondLine[2])));
+                }
+                console.log(bookingItems);
+
+                return new BookingBatch(workHours[0], workHours[1], bookingItems);
+            }
+
+            function printResult(data) {
+                var textArea = $('#successMeetings');
+                for(var i = 0; i < data.length; i++) {
+                    textArea.val(textArea.val() + data[i].requestSubmissionTime + ' ' + data[i].userId + '\n');
+                    textArea.val(textArea.val() + data[i].meetingStartTime + ' ' + data[i].duration + '\n');
+                };
+            }
         });
     </script>
 </head>
 <body>
-<button id="showStatusButton" href="#" onclick="">Show status</button>
-<button id="postBatches" href="#" onclick="">Post Batches</button>
-<!--<form id="postBatches" name="batches" enctype="multipart/form-data">
-    <button id="postBatchesButton">post batches</button>
-</form>-->
+<button style="margin-bottom: 20px" id="showStatusButton" href="#" onclick="">Show status</button>
+<br/>
+<textarea style="margin-bottom: 20px" id="meetingBatch" name="batch" cols="40" rows="10">
+0900 1730
+2011-03-17 10:17:06 EMP001
+2011-03-21 09:00 2
+2011-03-16 12:34:56 EMP002
+2011-03-21 09:00 2
+2011-03-16 09:28:23 EMP003
+2011-03-22 14:00 2
+2011-03-17 11:23:45 EMP004
+2011-03-22 16:00 1
+2011-03-15 17:29:12 EMP005
+2011-03-21 16:00 3
+</textarea>
+<br/>
+<button style="margin-bottom: 20px" id="postBatches" href="#" onclick="">Post Batches</button>
+<br/>
+<textarea  id="successMeetings" name="success" cols="40" rows="10"></textarea>
 </body>
 </html>

@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class BookingBatch implements Serializable{
     private String startOfWorkDay;
     private String endOfWorkDay;
-    private BookingNode[] bookingNodes;
+    private BookingItem[] bookingItems;
 
     public String getStartOfWorkDay() {
         return startOfWorkDay;
@@ -27,11 +27,11 @@ public class BookingBatch implements Serializable{
         this.endOfWorkDay = endOfWorkDay;
     }
 
-    public BookingNode[] getBookingNodes() {
-        return bookingNodes;
+    public BookingItem[] getBookingItems() {
+        return bookingItems;
     }
 
-    public void setBookingNodes(BookingNode[] bookingNodes) {
-        this.bookingNodes = bookingNodes;
+    public void setBookingItems(BookingItem[] bookingItems) {
+        this.bookingItems = bookingItems;
     }
 }

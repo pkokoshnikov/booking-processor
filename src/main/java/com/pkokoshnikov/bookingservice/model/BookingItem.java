@@ -1,30 +1,32 @@
 package com.pkokoshnikov.bookingservice.model;
 
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pkokoshnikov.bookingservice.util.date.CustomDateDeserializer;
-import com.pkokoshnikov.bookingservice.util.date.CustomDateSerializer;
+import com.pkokoshnikov.bookingservice.util.formatters.*;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
  * User: pako1113
  * Date: 07.07.15
  */
-public class BookingNode implements Serializable{
+public class BookingItem implements Serializable{
 
-    @JsonDeserialize(using = CustomDateDeserializer.class)
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonDeserialize(using = RequestSubmissionDateDeserializer.class)
+    @JsonSerialize(using = RequestSubmissionDateSerializer.class)
+    @JsonView(Views.Extended.class)
     private Date requestSubmissionTime;
 
-    @JsonSerialize(using = CustomDateSerializer.class)
-    @JsonDeserialize(using = CustomDateDeserializer.class)
+    @JsonSerialize(using = MeetingStartDateSerializer.class)
+    @JsonDeserialize(using = MeetingStartDateDeserializer.class)
+    @JsonView(Views.Public.class)
     private Date meetingStartTime;
 
+    @JsonView(Views.Public.class)
     private String userId;
+    @JsonView(Views.Extended.class)
     private Integer duration;
 
     public Date getRequestSubmissionTime() {
@@ -51,7 +53,6 @@ public class BookingNode implements Serializable{
         this.userId = userId;
     }
 
-
     public Integer getDuration() {
         return duration;
     }
@@ -62,11 +63,16 @@ public class BookingNode implements Serializable{
 
     @Override
     public String toString() {
-        return "BookingNode{" +
+        return "BookingItem{" +
                 "requestSubmissionTime=" + requestSubmissionTime +
                 ", meetingStartTime=" + meetingStartTime +
                 ", userId='" + userId + '\'' +
                 ", duration=" + duration +
                 '}';
+    }
+
+    public class Views {
+        public class Public{}
+        public class Extended{}
     }
 }

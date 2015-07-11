@@ -1,9 +1,7 @@
 package com.pkokoshnikov.bookingservice.process;
 
 import com.pkokoshnikov.bookingservice.model.BookingBatch;
-import com.pkokoshnikov.bookingservice.model.BookingNode;
-import org.jvnet.hk2.annotations.Contract;
-import org.jvnet.hk2.annotations.Service;
+import com.pkokoshnikov.bookingservice.model.GroupByDayBookingItem;
 
 import java.util.List;
 
@@ -13,5 +11,5 @@ import java.util.List;
  * This interface provides method for processing of batch meetings
  */
 public interface BookingProcessor {
-    List<BookingNode> processBatch(BookingBatch bookingBatch);
+    List<GroupByDayBookingItem> processBatch(BookingBatch bookingBatch);
 }

@@ -5,8 +5,10 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.pkokoshnikov.bookingservice.model.BookingBatch;
-import com.pkokoshnikov.bookingservice.model.BookingNode;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
+import com.pkokoshnikov.bookingservice.model.GroupByDayBookingItem;
 import com.sun.istack.internal.Nullable;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -20,36 +22,37 @@ public class BookingProcessorImpl implements BookingProcessor {
     final Calendar cal = Calendar.getInstance();
 
     @Override
-    public List<BookingNode> processBatch(final BookingBatch bookingBatch) {
+    public List<GroupByDayBookingItem> processBatch(final BookingBatch bookingBatch) {
         logger.info("processBatch");
-        List<BookingNode> bookingNodes = Arrays.asList(bookingBatch.getBookingNodes());
+        List<BookingItem> bookingItems = Arrays.asList(bookingBatch.getBookingItems());
 
         //Filtering meetings which cannot be conducted in work hours
-        List<BookingNode> filteredNodes = Lists.newArrayList(Iterables.filter(bookingNodes, new Predicate<BookingNode>() {
+        List<BookingItem> filteredBookingItems = Lists.newArrayList(Iterables.filter(bookingItems, new Predicate<BookingItem>() {
             @Override
-            public boolean apply(@Nullable BookingNode input) {
+            public boolean apply(@Nullable BookingItem input) {
                 return isWorkingHoursMeeting(input, bookingBatch.getStartOfWorkDay(), bookingBatch.getEndOfWorkDay());
             }
         }));
 
         //Sorting of meetings by request time submission
-        Collections.sort(filteredNodes, new RequestSubmissionTimeComparator());
-        List<BookingNode> successFullBookingList = new LinkedList<>();
+        Collections.sort(filteredBookingItems, new RequestSubmissionTimeComparator());
+        List<BookingItem> approvedBookingItems = new LinkedList<>();
 
-
-        for (final BookingNode bookingNode : filteredNodes) {
+        for (final BookingItem bookingItem : filteredBookingItems) {
             //try to find intersecting meetings
-            Optional<BookingNode> foundNode = Iterables.tryFind(successFullBookingList, new Predicate<BookingNode>() {
+            Optional<BookingItem> foundNode = Iterables.tryFind(approvedBookingItems, new Predicate<BookingItem>() {
                 @Override
-                public boolean apply(@Nullable com.pkokoshnikov.bookingservice.model.BookingNode input) {
-                    return isIntersected(input, bookingNode);
+                public boolean apply(@Nullable BookingItem input) {
+                    return isIntersected(input, bookingItem);
                 }
             });
-            //if we didn't find intersection we add it to success list
-            if (!foundNode.isPresent()) successFullBookingList.add(bookingNode);
+            //if we didn't find intersection we add it to approved list
+            if (!foundNode.isPresent()) approvedBookingItems.add(bookingItem);
         }
+        //Sorting of meetings by start time of meeting
+        Collections.sort(approvedBookingItems, new MeetingStartTimeComparator());
 
-        return successFullBookingList;
+        return groupByDate(approvedBookingItems);
     }
 
     /**
@@ -86,7 +89,7 @@ public class BookingProcessorImpl implements BookingProcessor {
      * @return true if we have intersection and node cannot be added to list
      *         and false in we need to add this node to list
      */
-    private boolean isIntersected(BookingNode currentNode, BookingNode checkNode) {
+    private boolean isIntersected(BookingItem currentNode, BookingItem checkNode) {
         long currentMeetingStartTime = currentNode.getMeetingStartTime().getTime();
         long currentMeetingEndTime = getMeetingEndTime(currentNode.getMeetingStartTime(), currentNode.getDuration()).getTime();
 
@@ -106,24 +109,50 @@ public class BookingProcessorImpl implements BookingProcessor {
         }
     }
 
+    private List<GroupByDayBookingItem> groupByDate(List<BookingItem> bookingItems) {
+        List<GroupByDayBookingItem> groupByDayBookingItems = new ArrayList<>();
+        if (bookingItems.isEmpty()) return groupByDayBookingItems;
+
+        Date currentDay = bookingItems.get(0).getMeetingStartTime();
+        GroupByDayBookingItem groupByDayBookingItem = new GroupByDayBookingItem();
+        groupByDayBookingItem.setDateOfMeeting(currentDay);
+
+        for (BookingItem bookingItem : bookingItems) {
+            if (DateUtils.isSameDay(currentDay, bookingItem.getMeetingStartTime())) {
+                groupByDayBookingItem.addBookingItem(bookingItem);
+            } else {
+                groupByDayBookingItems.add(groupByDayBookingItem);
+
+                currentDay = bookingItem.getMeetingStartTime();
+                groupByDayBookingItem = new GroupByDayBookingItem();
+                groupByDayBookingItem.setDateOfMeeting(currentDay);
+                groupByDayBookingItem.addBookingItem(bookingItem);
+            }
+        }
+
+        groupByDayBookingItems.add(groupByDayBookingItem);
+
+        return groupByDayBookingItems;
+    }
+
     /**
      * This method detects that meeting is booked in work hours
-     * @param bookingNode
+     * @param bookingItem
      * @param workingStartTime
      * @param workingEndTime
      * @return
      */
-    private boolean isWorkingHoursMeeting(BookingNode bookingNode, String workingStartTime, String workingEndTime) {
-        long meetingStartTime = bookingNode.getMeetingStartTime().getTime();
-        long meetingEndTime = getMeetingEndTime(bookingNode.getMeetingStartTime(), bookingNode.getDuration()).getTime();
+    private boolean isWorkingHoursMeeting(BookingItem bookingItem, String workingStartTime, String workingEndTime) {
+        long meetingStartTime = bookingItem.getMeetingStartTime().getTime();
+        long meetingEndTime = getMeetingEndTime(bookingItem.getMeetingStartTime(), bookingItem.getDuration()).getTime();
 
-        cal.setTime(bookingNode.getMeetingStartTime());
-        cal.set(Calendar.HOUR_OF_DAY,Integer.valueOf(workingStartTime).intValue() / 100);
-        cal.set(Calendar.MINUTE, Integer.valueOf(workingStartTime).intValue() % 100);
+        cal.setTime(bookingItem.getMeetingStartTime());
+        cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(workingStartTime) / 100);
+        cal.set(Calendar.MINUTE, Integer.valueOf(workingStartTime) % 100);
         long lWorkingStartTime = cal.getTimeInMillis();
 
-        cal.set(Calendar.HOUR_OF_DAY,Integer.valueOf(workingEndTime).intValue() / 100);
-        cal.set(Calendar.MINUTE, Integer.valueOf(workingEndTime).intValue() % 100);
+        cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(workingEndTime) / 100);
+        cal.set(Calendar.MINUTE, Integer.valueOf(workingEndTime) % 100);
         long lWorkingEndTime = cal.getTimeInMillis();
 
         if (meetingStartTime < lWorkingStartTime) {
