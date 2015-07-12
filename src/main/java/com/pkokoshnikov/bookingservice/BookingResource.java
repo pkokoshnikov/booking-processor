@@ -5,6 +5,8 @@ import com.pkokoshnikov.bookingservice.model.BookingBatch;
 import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.model.GroupByDayBookingItem;
 import com.pkokoshnikov.bookingservice.process.BookingProcessor;
+import com.pkokoshnikov.bookingservice.process.BookingProcessorFactory;
+import com.pkokoshnikov.bookingservice.process.types.ProcessorType;
 import org.apache.log4j.Logger;
 import org.jvnet.hk2.annotations.Service;
 
@@ -28,11 +30,11 @@ public class BookingResource {
 
     final static Logger logger = Logger.getLogger(BookingResource.class);
 
-    private final BookingProcessor bookingProcessor;
+    private final BookingProcessorFactory bookingProcessorFactory;
 
     @Inject
-    public BookingResource(BookingProcessor bookingProcessor) {
-        this.bookingProcessor = bookingProcessor;
+    public BookingResource(BookingProcessorFactory bookingProcessorFactory) {
+        this.bookingProcessorFactory = bookingProcessorFactory;
     }
 
     @POST
@@ -42,12 +44,18 @@ public class BookingResource {
     @JsonView(BookingItem.Views.Public.class)
     public List<GroupByDayBookingItem> doProcessOfBatchBookingRequest(BookingBatch bookingBatch) {
         logger.info("doProcessOfBatchBookingRequest");
-        for(BookingItem bookingItem : bookingBatch.getBookingItems()) {
-            logger.info(bookingItem.toString());
+        if(logger.isDebugEnabled()) {
+            for(BookingItem bookingItem : bookingBatch.getBookingItems()) {
+                logger.debug(bookingItem.toString());
+            }
         }
+        BookingProcessor bookingProcessor = bookingProcessorFactory.create(ProcessorType.SIMPLE_BOOKING_PROCESSOR);
         List<GroupByDayBookingItem> bookingItems = bookingProcessor.processBatch(bookingBatch);
-        for(GroupByDayBookingItem bookingItem : bookingItems) {
-            logger.info(bookingItem.toString());
+
+        if(logger.isDebugEnabled()) {
+            for(GroupByDayBookingItem bookingItem : bookingItems) {
+                logger.debug(bookingItem.toString());
+            }
         }
 
         return bookingItems;

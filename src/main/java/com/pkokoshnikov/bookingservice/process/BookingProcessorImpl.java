@@ -91,10 +91,10 @@ public class BookingProcessorImpl implements BookingProcessor {
      */
     private boolean isIntersected(BookingItem currentNode, BookingItem checkNode) {
         long currentMeetingStartTime = currentNode.getMeetingStartTime().getTime();
-        long currentMeetingEndTime = getMeetingEndTime(currentNode.getMeetingStartTime(), currentNode.getDuration()).getTime();
+        long currentMeetingEndTime = currentNode.getMeetingEndTime().getTime();
 
         long checkMeetingStartTime = checkNode.getMeetingStartTime().getTime();
-        long checkMeetingEndTime = getMeetingEndTime(checkNode.getMeetingStartTime(), checkNode.getDuration()).getTime();
+        long checkMeetingEndTime = checkNode.getMeetingEndTime().getTime();
 
         if (currentMeetingEndTime == checkMeetingStartTime || checkMeetingEndTime == currentMeetingStartTime) {
             return false;
@@ -144,7 +144,7 @@ public class BookingProcessorImpl implements BookingProcessor {
      */
     private boolean isWorkingHoursMeeting(BookingItem bookingItem, String workingStartTime, String workingEndTime) {
         long meetingStartTime = bookingItem.getMeetingStartTime().getTime();
-        long meetingEndTime = getMeetingEndTime(bookingItem.getMeetingStartTime(), bookingItem.getDuration()).getTime();
+        long meetingEndTime = bookingItem.getMeetingEndTime().getTime();
 
         cal.setTime(bookingItem.getMeetingStartTime());
         cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(workingStartTime) / 100);
@@ -162,12 +162,5 @@ public class BookingProcessorImpl implements BookingProcessor {
         }
 
         return true;
-    }
-
-    private Date getMeetingEndTime(Date date, int duration) {
-        cal.setTime(date);
-        cal.add(Calendar.HOUR_OF_DAY, duration);
-
-        return cal.getTime();
     }
 }

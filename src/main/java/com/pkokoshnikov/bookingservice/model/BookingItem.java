@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pkokoshnikov.bookingservice.util.formatters.*;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -13,13 +14,14 @@ import java.util.Date;
  * Date: 07.07.15
  */
 public class BookingItem implements Serializable{
+    final Calendar cal = Calendar.getInstance();
 
     @JsonDeserialize(using = RequestSubmissionDateDeserializer.class)
     @JsonSerialize(using = RequestSubmissionDateSerializer.class)
     @JsonView(Views.Extended.class)
     private Date requestSubmissionTime;
 
-    @JsonSerialize(using = MeetingStartDateSerializer.class)
+    @JsonSerialize(using = MeetingDateSerializer.class)
     @JsonDeserialize(using = MeetingStartDateDeserializer.class)
     @JsonView(Views.Public.class)
     private Date meetingStartTime;
@@ -59,6 +61,15 @@ public class BookingItem implements Serializable{
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    @JsonSerialize(using = MeetingDateSerializer.class)
+    @JsonView(Views.Public.class)
+    public Date getMeetingEndTime() {
+        cal.setTime(meetingStartTime);
+        cal.add(Calendar.HOUR_OF_DAY, duration);
+
+        return cal.getTime();
     }
 
     @Override

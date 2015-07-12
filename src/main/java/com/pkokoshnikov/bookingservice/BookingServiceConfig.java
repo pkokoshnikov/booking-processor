@@ -8,8 +8,6 @@ import org.glassfish.jersey.server.ResourceConfig;
  * Date: 08.07.15
  */
 public class BookingServiceConfig extends ResourceConfig {
-
-
     public BookingServiceConfig() {
         register(new ApplicationBinder());
     }

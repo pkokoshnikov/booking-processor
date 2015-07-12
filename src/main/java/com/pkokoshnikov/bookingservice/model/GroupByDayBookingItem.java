@@ -1,7 +1,6 @@
 package com.pkokoshnikov.bookingservice.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pkokoshnikov.bookingservice.util.formatters.MeetingStartDateSerializer;
 import com.pkokoshnikov.bookingservice.util.formatters.ResponseMetingDateSerializer;
 
 import java.io.Serializable;

@@ -54,9 +54,13 @@
 
             function printResult(data) {
                 var textArea = $('#successMeetings');
+                textArea.val('');
                 for(var i = 0; i < data.length; i++) {
-                    textArea.val(textArea.val() + data[i].requestSubmissionTime + ' ' + data[i].userId + '\n');
-                    textArea.val(textArea.val() + data[i].meetingStartTime + ' ' + data[i].duration + '\n');
+                    textArea.val(textArea.val() + data[i].dateOfMeeting + '\n');
+                    var bookingItems = data[i].bookingItems;
+                    for(var j = 0; j < bookingItems.length; j++) {
+                        textArea.val(textArea.val() + bookingItems[j].meetingStartTime + ' ' + bookingItems[j].meetingEndTime + ' ' + bookingItems[j].userId + '\n');
+                    }
                 };
             }
         });

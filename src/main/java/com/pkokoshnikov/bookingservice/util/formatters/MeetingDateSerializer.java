@@ -11,9 +11,9 @@ import java.util.Date;
 /**
  * Created by pavel on 10.07.2015.
  */
-public class MeetingStartDateSerializer extends JsonSerializer<Date> {
+public class MeetingDateSerializer extends JsonSerializer<Date> {
     private static SimpleDateFormat formatter =
-            new SimpleDateFormat(Constants.MEETING_START_FORMAT);
+            new SimpleDateFormat(Constants.RESPONSE_MEETING_START_END_TIME_FORMAT);
 
     @Override
     public void serialize(Date value, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
