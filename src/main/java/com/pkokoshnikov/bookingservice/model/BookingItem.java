@@ -16,17 +16,13 @@ import java.util.Date;
 public class BookingItem implements Serializable{
     @JsonDeserialize(using = RequestSubmissionDateDeserializer.class)
     @JsonSerialize(using = RequestSubmissionDateSerializer.class)
-    /*@JsonView(Views.Extended.class)*/
     private Date requestSubmissionTime;
 
     @JsonSerialize(using = MeetingStartDateSerializer.class)
     @JsonDeserialize(using = MeetingStartDateDeserializer.class)
-/*    @JsonView(Views.Public.class)*/
     private Date meetingStartTime;
 
-    /*@JsonView(Views.Public.class)*/
     private String userId;
-    /*@JsonView(Views.Extended.class)*/
     private Integer duration;
 
     public BookingItem(Date requestSubmissionTime, Date meetingStartTime, String userId, Integer duration) {
@@ -70,18 +66,6 @@ public class BookingItem implements Serializable{
     public void setDuration(Integer duration) {
         this.duration = duration;
     }
-
-
-    /*@JsonSerialize(using = MeetingDateSerializer.class)
-    @JsonView(Views.Public.class)*/
-/*    @JsonIgnore
-    public Date getMeetingEndTime() {
-        cal.setTime(meetingStartTime);
-        cal.add(Calendar.HOUR_OF_DAY, duration);
-
-        return cal.getTime();
-    }*/
-
 
     @Override
     public String toString() {

@@ -13,6 +13,7 @@ import org.jvnet.hk2.annotations.Service;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 
@@ -47,6 +48,7 @@ public class BookingResource {
                 logger.debug(bookingItem.toString());
             }
         }
+
         BookingProcessor bookingProcessor = bookingProcessorFactory.create(ProcessorType.BOOKING_PROCESSOR);
         List<GroupByDayBookingItem> bookingItems = bookingProcessor.processBatch(bookingBatch);
 
@@ -59,13 +61,12 @@ public class BookingResource {
         return bookingItems;
     }
 
-
     @GET
     @Path("/status")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getStatusService() {
+    public Response getStatusService() {
         logger.info("getStatusService");
-        return "OK";
+        return Response.ok().entity("Ok").status(Response.Status.OK).build();
     }
 
 }
