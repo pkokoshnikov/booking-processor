@@ -6,15 +6,13 @@ import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.model.GroupByDayBookingItem;
 import com.pkokoshnikov.bookingservice.process.BookingProcessor;
 import com.pkokoshnikov.bookingservice.process.BookingProcessorFactory;
-import com.pkokoshnikov.bookingservice.process.types.ProcessorType;
+import com.pkokoshnikov.bookingservice.process.ProcessorType;
 import org.apache.log4j.Logger;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -49,7 +47,7 @@ public class BookingResource {
                 logger.debug(bookingItem.toString());
             }
         }
-        BookingProcessor bookingProcessor = bookingProcessorFactory.create(ProcessorType.SIMPLE_BOOKING_PROCESSOR);
+        BookingProcessor bookingProcessor = bookingProcessorFactory.create(ProcessorType.BOOKING_PROCESSOR);
         List<GroupByDayBookingItem> bookingItems = bookingProcessor.processBatch(bookingBatch);
 
         if(logger.isDebugEnabled()) {

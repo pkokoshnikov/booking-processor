@@ -12,20 +12,20 @@ import java.util.List;
  * Created by pavel on 10.07.2015.
  */
 public class GroupByDayBookingItem implements Serializable{
-    private List<BookingItem> bookingItems = new ArrayList<>();
+    private List<BookingItemResponse> bookingItems = new ArrayList<>();
 
     @JsonSerialize(using = ResponseMetingDateSerializer.class)
     private Date dateOfMeeting;
 
     public void addBookingItem(BookingItem bookingItem) {
-        bookingItems.add(bookingItem);
+        bookingItems.add(new BookingItemResponse(bookingItem));
     }
 
-    public List<BookingItem> getBookingItems() {
+    public List<BookingItemResponse> getBookingItems() {
         return bookingItems;
     }
 
-    public void setBookingItems(List<BookingItem> bookingItems) {
+    public void setBookingItems(List<BookingItemResponse> bookingItems) {
         this.bookingItems = bookingItems;
     }
 

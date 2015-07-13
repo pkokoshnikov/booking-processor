@@ -1,6 +1,7 @@
 package com.pkokoshnikov.bookingservice.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * User: pako1113
@@ -10,6 +11,15 @@ public class BookingBatch implements Serializable{
     private String startOfWorkDay;
     private String endOfWorkDay;
     private BookingItem[] bookingItems;
+
+    public BookingBatch(String startOfWorkDay, String endOfWorkDay, BookingItem[] bookingItems) {
+        this.startOfWorkDay = startOfWorkDay;
+        this.endOfWorkDay = endOfWorkDay;
+        this.bookingItems = bookingItems;
+    }
+
+    public BookingBatch() {
+    }
 
     public String getStartOfWorkDay() {
         return startOfWorkDay;
@@ -33,5 +43,14 @@ public class BookingBatch implements Serializable{
 
     public void setBookingItems(BookingItem[] bookingItems) {
         this.bookingItems = bookingItems;
+    }
+
+    @Override
+    public String toString() {
+        return "BookingBatch{" +
+                "startOfWorkDay='" + startOfWorkDay + '\'' +
+                ", endOfWorkDay='" + endOfWorkDay + '\'' +
+                ", bookingItems=" + Arrays.toString(bookingItems) +
+                '}';
     }
 }

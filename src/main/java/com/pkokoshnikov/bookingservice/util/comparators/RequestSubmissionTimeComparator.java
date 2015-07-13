@@ -1,4 +1,4 @@
-package com.pkokoshnikov.bookingservice.process;
+package com.pkokoshnikov.bookingservice.util.comparators;
 
 import com.pkokoshnikov.bookingservice.model.BookingItem;
 

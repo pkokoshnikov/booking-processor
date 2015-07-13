@@ -14,22 +14,30 @@ import java.util.Date;
  * Date: 07.07.15
  */
 public class BookingItem implements Serializable{
-    final Calendar cal = Calendar.getInstance();
-
     @JsonDeserialize(using = RequestSubmissionDateDeserializer.class)
     @JsonSerialize(using = RequestSubmissionDateSerializer.class)
-    @JsonView(Views.Extended.class)
+    /*@JsonView(Views.Extended.class)*/
     private Date requestSubmissionTime;
 
-    @JsonSerialize(using = MeetingDateSerializer.class)
+    @JsonSerialize(using = MeetingStartDateSerializer.class)
     @JsonDeserialize(using = MeetingStartDateDeserializer.class)
-    @JsonView(Views.Public.class)
+/*    @JsonView(Views.Public.class)*/
     private Date meetingStartTime;
 
-    @JsonView(Views.Public.class)
+    /*@JsonView(Views.Public.class)*/
     private String userId;
-    @JsonView(Views.Extended.class)
+    /*@JsonView(Views.Extended.class)*/
     private Integer duration;
+
+    public BookingItem(Date requestSubmissionTime, Date meetingStartTime, String userId, Integer duration) {
+        this.requestSubmissionTime = requestSubmissionTime;
+        this.meetingStartTime = meetingStartTime;
+        this.userId = userId;
+        this.duration = duration;
+    }
+
+    public BookingItem() {
+    }
 
     public Date getRequestSubmissionTime() {
         return requestSubmissionTime;
@@ -63,14 +71,17 @@ public class BookingItem implements Serializable{
         this.duration = duration;
     }
 
-    @JsonSerialize(using = MeetingDateSerializer.class)
-    @JsonView(Views.Public.class)
+
+    /*@JsonSerialize(using = MeetingDateSerializer.class)
+    @JsonView(Views.Public.class)*/
+/*    @JsonIgnore
     public Date getMeetingEndTime() {
         cal.setTime(meetingStartTime);
         cal.add(Calendar.HOUR_OF_DAY, duration);
 
         return cal.getTime();
-    }
+    }*/
+
 
     @Override
     public String toString() {
@@ -80,6 +91,32 @@ public class BookingItem implements Serializable{
                 ", userId='" + userId + '\'' +
                 ", duration=" + duration +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BookingItem that = (BookingItem) o;
+
+        if (duration != null ? !duration.equals(that.duration) : that.duration != null) return false;
+        if (meetingStartTime != null ? !meetingStartTime.equals(that.meetingStartTime) : that.meetingStartTime != null)
+            return false;
+        if (requestSubmissionTime != null ? !requestSubmissionTime.equals(that.requestSubmissionTime) : that.requestSubmissionTime != null)
+            return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = requestSubmissionTime != null ? requestSubmissionTime.hashCode() : 0;
+        result = 31 * result + (meetingStartTime != null ? meetingStartTime.hashCode() : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (duration != null ? duration.hashCode() : 0);
+        return result;
     }
 
     public class Views {

@@ -7,6 +7,8 @@ import com.google.common.collect.Lists;
 import com.pkokoshnikov.bookingservice.model.BookingBatch;
 import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.model.GroupByDayBookingItem;
+import com.pkokoshnikov.bookingservice.util.comparators.MeetingStartTimeComparator;
+import com.pkokoshnikov.bookingservice.util.comparators.RequestSubmissionTimeComparator;
 import com.sun.istack.internal.Nullable;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -91,10 +93,10 @@ public class BookingProcessorImpl implements BookingProcessor {
      */
     private boolean isIntersected(BookingItem currentNode, BookingItem checkNode) {
         long currentMeetingStartTime = currentNode.getMeetingStartTime().getTime();
-        long currentMeetingEndTime = currentNode.getMeetingEndTime().getTime();
+        long currentMeetingEndTime = getMeetingEndTime(currentNode).getTime();
 
         long checkMeetingStartTime = checkNode.getMeetingStartTime().getTime();
-        long checkMeetingEndTime = checkNode.getMeetingEndTime().getTime();
+        long checkMeetingEndTime = getMeetingEndTime(checkNode).getTime();
 
         if (currentMeetingEndTime == checkMeetingStartTime || checkMeetingEndTime == currentMeetingStartTime) {
             return false;
@@ -144,7 +146,7 @@ public class BookingProcessorImpl implements BookingProcessor {
      */
     private boolean isWorkingHoursMeeting(BookingItem bookingItem, String workingStartTime, String workingEndTime) {
         long meetingStartTime = bookingItem.getMeetingStartTime().getTime();
-        long meetingEndTime = bookingItem.getMeetingEndTime().getTime();
+        long meetingEndTime = getMeetingEndTime(bookingItem).getTime();
 
         cal.setTime(bookingItem.getMeetingStartTime());
         cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(workingStartTime) / 100);
@@ -162,5 +164,12 @@ public class BookingProcessorImpl implements BookingProcessor {
         }
 
         return true;
+    }
+
+    Date getMeetingEndTime(BookingItem bookingItem) {
+        cal.setTime(bookingItem.getMeetingStartTime());
+        cal.add(Calendar.HOUR_OF_DAY, bookingItem.getDuration());
+
+        return cal.getTime();
     }
 }
