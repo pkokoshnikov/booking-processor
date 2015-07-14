@@ -5,7 +5,8 @@ import com.pkokoshnikov.bookingservice.model.BookingItem;
 import java.util.Comparator;
 
 /**
- * Created by pavel on 11.07.2015.
+ * User: pako1113
+ * Date: 11.07.15
  */
 public class MeetingStartTimeComparator implements Comparator<BookingItem>{
     @Override

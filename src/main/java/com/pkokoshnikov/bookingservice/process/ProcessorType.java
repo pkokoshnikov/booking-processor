@@ -1,7 +1,9 @@
 package com.pkokoshnikov.bookingservice.process;
 
 /**
- * Created by pavel on 12.07.2015.
+ * User: pako1113
+ * Date: 08.07.15
+ * This enum provides types of processors
  */
 public enum ProcessorType {
     BOOKING_PROCESSOR;

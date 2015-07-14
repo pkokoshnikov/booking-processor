@@ -6,6 +6,7 @@ import java.util.Arrays;
 /**
  * User: pako1113
  * Date: 09.07.15
+ * This class provides POJO model for input model of booking batch
  */
 public class BookingBatch implements Serializable{
     private String startOfWorkDay;

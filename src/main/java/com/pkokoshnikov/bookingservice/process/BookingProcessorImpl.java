@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.pkokoshnikov.bookingservice.model.BookingBatch;
 import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.model.GroupByDayBookingItem;
+import com.pkokoshnikov.bookingservice.model.ResponseView;
 import com.pkokoshnikov.bookingservice.util.comparators.MeetingStartTimeComparator;
 import com.pkokoshnikov.bookingservice.util.comparators.RequestSubmissionTimeComparator;
 import com.sun.istack.internal.Nullable;
@@ -19,7 +20,7 @@ import java.util.*;
  * User: pako1113
  * Date: 08.07.15
  */
-public class BookingProcessorImpl implements BookingProcessor {
+public class BookingProcessorImpl implements BookingProcessor<GroupByDayBookingItem> {
     final static Logger logger = Logger.getLogger(BookingProcessorImpl.class);
     final Calendar cal = Calendar.getInstance();
 
@@ -54,7 +55,7 @@ public class BookingProcessorImpl implements BookingProcessor {
         //Sorting of meetings by start time of meeting
         Collections.sort(approvedBookingItems, new MeetingStartTimeComparator());
 
-        return groupByDate(approvedBookingItems);
+        return getResponseViewOfProcessing(approvedBookingItems);
     }
 
     /**
@@ -111,7 +112,12 @@ public class BookingProcessorImpl implements BookingProcessor {
         }
     }
 
-    private List<GroupByDayBookingItem> groupByDate(List<BookingItem> bookingItems) {
+    /**
+     * This method provides grouping by day of meetings
+     * @param bookingItems items for grouping
+     * @return list grouping meetings
+     */
+    protected List<GroupByDayBookingItem> getResponseViewOfProcessing(List<BookingItem> bookingItems) {
         List<GroupByDayBookingItem> groupByDayBookingItems = new ArrayList<>();
         if (bookingItems.isEmpty()) return groupByDayBookingItems;
 
@@ -139,10 +145,7 @@ public class BookingProcessorImpl implements BookingProcessor {
 
     /**
      * This method detects that meeting is booked in work hours
-     * @param bookingItem
-     * @param workingStartTime
-     * @param workingEndTime
-     * @return
+     * @return true if meeting is booked in work hours
      */
     private boolean isWorkingHoursMeeting(BookingItem bookingItem, String workingStartTime, String workingEndTime) {
         long meetingStartTime = bookingItem.getMeetingStartTime().getTime();

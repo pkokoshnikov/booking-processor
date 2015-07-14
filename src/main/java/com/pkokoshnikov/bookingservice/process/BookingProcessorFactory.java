@@ -1,7 +1,9 @@
 package com.pkokoshnikov.bookingservice.process;
 
 /**
- * Created by pavel on 12.07.2015.
+ * User: pako1113
+ * Date: 12.07.15
+ * This interface provides method for creating of processor
  */
 public interface BookingProcessorFactory {
     BookingProcessor create(ProcessorType processorType);

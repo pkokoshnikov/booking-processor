@@ -9,9 +9,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by pavel on 10.07.2015.
+ * User: pako1113
+ * Date: 13.07.15
+ * This class provides model for group by day response
  */
-public class GroupByDayBookingItem implements Serializable{
+public class GroupByDayBookingItem implements ResponseView, Serializable{
     private List<BookingItemResponse> bookingItems = new ArrayList<>();
 
     @JsonSerialize(using = ResponseMetingDateSerializer.class)

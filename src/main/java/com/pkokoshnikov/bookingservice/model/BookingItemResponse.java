@@ -7,6 +7,7 @@ import java.util.Calendar;
 /**
  * User: pako1113
  * Date: 13.07.15
+ * This class provides model for response item
  */
 public class BookingItemResponse {
     private final Calendar cal = Calendar.getInstance();

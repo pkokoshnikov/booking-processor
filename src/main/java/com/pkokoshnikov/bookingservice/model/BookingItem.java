@@ -1,17 +1,16 @@
 package com.pkokoshnikov.bookingservice.model;
 
-import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pkokoshnikov.bookingservice.util.formatters.*;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
  * User: pako1113
  * Date: 07.07.15
+ * This class provides POJO model for booking items
  */
 public class BookingItem implements Serializable{
     @JsonDeserialize(using = RequestSubmissionDateDeserializer.class)
