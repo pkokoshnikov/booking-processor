@@ -1,7 +1,6 @@
-package com.pkokoshnikov.bookingservice.util.formatters;
+package com.pkokoshnikov.bookingservice.util.date.formatter;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
@@ -11,11 +10,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by pavel on 10.07.2015.
+ * User: pako1113
+ * Date: 07.07.15
  */
-public class MeetingStartDateDeserializer extends JsonDeserializer<Date> {
+public class RequestSubmissionDateDeserializer extends JsonDeserializer<Date> {
+
     private static SimpleDateFormat formatter =
-            new SimpleDateFormat(Constants.MEETING_START_FORMAT);
+            new SimpleDateFormat(DateConstants.REQUEST_SUBMISSION_FORMAT);
 
     @Override
     public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {

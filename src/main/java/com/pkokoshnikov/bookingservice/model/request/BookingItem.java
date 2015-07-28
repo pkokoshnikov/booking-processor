@@ -1,9 +1,14 @@
-package com.pkokoshnikov.bookingservice.model;
+package com.pkokoshnikov.bookingservice.model.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pkokoshnikov.bookingservice.util.formatters.*;
+import com.pkokoshnikov.bookingservice.util.date.formatter.MeetingStartDateDeserializer;
+import com.pkokoshnikov.bookingservice.util.date.formatter.MeetingStartDateSerializer;
+import com.pkokoshnikov.bookingservice.util.date.formatter.RequestSubmissionDateDeserializer;
+import com.pkokoshnikov.bookingservice.util.date.formatter.RequestSubmissionDateSerializer;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,16 +17,33 @@ import java.util.Date;
  * Date: 07.07.15
  * This class provides POJO model for booking items
  */
+@Entity
+@Table(name = "bookings")
+@NamedQueries({
+    @NamedQuery(name="BookingItem.findAll", query="SELECT bi FROM BookingItem bi"),
+    @NamedQuery(name="BookingItem.findByUserId", query="SELECT bi FROM BookingItem bi WHERE bi.userId = :userId")
+})
+@JsonIgnoreProperties({"id"})
 public class BookingItem implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(name ="request_time")
+    @Temporal(TemporalType.DATE)
     @JsonDeserialize(using = RequestSubmissionDateDeserializer.class)
     @JsonSerialize(using = RequestSubmissionDateSerializer.class)
     private Date requestSubmissionTime;
 
+    @Column(name ="meeting_time")
+    @Temporal(TemporalType.DATE)
     @JsonSerialize(using = MeetingStartDateSerializer.class)
     @JsonDeserialize(using = MeetingStartDateDeserializer.class)
     private Date meetingStartTime;
 
+    @Column(name = "user_id")
     private String userId;
+    @Column(name = "duration")
     private Integer duration;
 
     public BookingItem(Date requestSubmissionTime, Date meetingStartTime, String userId, Integer duration) {
@@ -102,8 +124,11 @@ public class BookingItem implements Serializable{
         return result;
     }
 
-    public class Views {
-        public class Public{}
-        public class Extended{}
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

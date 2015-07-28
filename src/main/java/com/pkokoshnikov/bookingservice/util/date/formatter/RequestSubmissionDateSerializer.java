@@ -1,4 +1,4 @@
-package com.pkokoshnikov.bookingservice.util.formatters;
+package com.pkokoshnikov.bookingservice.util.date.formatter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -14,7 +14,7 @@ import java.util.Date;
  */
 public class RequestSubmissionDateSerializer extends JsonSerializer<Date> {
     private static SimpleDateFormat formatter =
-            new SimpleDateFormat(Constants.REQUEST_SUBMISSION_FORMAT);
+            new SimpleDateFormat(DateConstants.REQUEST_SUBMISSION_FORMAT);
 
     @Override
     public void serialize(Date value, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {

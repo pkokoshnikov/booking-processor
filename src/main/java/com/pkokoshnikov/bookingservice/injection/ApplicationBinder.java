@@ -1,20 +1,25 @@
 package com.pkokoshnikov.bookingservice.injection;
 
+import com.pkokoshnikov.bookingservice.dao.BookingItemDAO;
+import com.pkokoshnikov.bookingservice.injection.factory.BookingProcessorFactory;
+import com.pkokoshnikov.bookingservice.injection.factory.PersistenceFactory;
+import com.pkokoshnikov.bookingservice.injection.factory.ResponsePackerFactory;
 import com.pkokoshnikov.bookingservice.process.BookingProcessor;
-import com.pkokoshnikov.bookingservice.process.BookingProcessorFactory;
-import com.pkokoshnikov.bookingservice.process.BookingProcessorFactoryImpl;
-import com.pkokoshnikov.bookingservice.process.BookingProcessorImpl;
-import org.glassfish.hk2.api.DynamicConfiguration;
-import org.glassfish.hk2.utilities.Binder;
-import org.glassfish.hk2.utilities.BuilderHelper;
+import com.pkokoshnikov.bookingservice.process.ResponsePacker;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
+
+import javax.persistence.EntityManager;
 
 /**
  * User: pako1113
- * Date: 08.07.15
+ * Date: 24.07.15
  */
-public class ApplicationBinder implements Binder {
+public class ApplicationBinder extends AbstractBinder {
     @Override
-    public void bind(DynamicConfiguration dynamicConfiguration) {
-        dynamicConfiguration.bind(BuilderHelper.link(BookingProcessorFactoryImpl.class).to(BookingProcessorFactory.class).build());
+    protected void configure() {
+        bind(BookingItemDAO.class).to(BookingItemDAO.class);
+        bindFactory(PersistenceFactory.class).to(EntityManager.class);
+        bindFactory(BookingProcessorFactory.class).to(BookingProcessor.class);
+        bindFactory(ResponsePackerFactory.class).to(ResponsePacker.class);
     }
 }

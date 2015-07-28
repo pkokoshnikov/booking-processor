@@ -1,11 +1,13 @@
 package com.pkokoshnikov.bookingservice;
 
+
 import com.pkokoshnikov.bookingservice.injection.ApplicationBinder;
-import com.pkokoshnikov.bookingservice.model.BookingBatch;
-import com.pkokoshnikov.bookingservice.model.BookingItem;
-import com.pkokoshnikov.bookingservice.model.BookingItemResponse;
-import com.pkokoshnikov.bookingservice.model.GroupByDayBookingItem;
-import com.pkokoshnikov.bookingservice.util.formatters.Constants;
+import com.pkokoshnikov.bookingservice.model.request.BookingBatch;
+import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.model.response.ResponseDayBookingItems;
+import com.pkokoshnikov.bookingservice.model.response.ResponseBookingItem;
+import com.pkokoshnikov.bookingservice.resource.BookingResource;
+import com.pkokoshnikov.bookingservice.util.date.formatter.DateConstants;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.*;
@@ -29,8 +31,8 @@ import static org.junit.Assert.assertEquals;
 
 public class BookingResourceTest extends JerseyTest {
 
-    private final SimpleDateFormat requestTimeSubmissionFormatter = new SimpleDateFormat(Constants.REQUEST_SUBMISSION_FORMAT);
-    private final SimpleDateFormat meetingStartDateFormatter = new SimpleDateFormat(Constants.MEETING_START_FORMAT);
+    private final SimpleDateFormat requestTimeSubmissionFormatter = new SimpleDateFormat(DateConstants.REQUEST_SUBMISSION_FORMAT);
+    private final SimpleDateFormat meetingStartDateFormatter = new SimpleDateFormat(DateConstants.MEETING_START_FORMAT);
 
     @Test
     public void statusTest() {
@@ -50,20 +52,20 @@ public class BookingResourceTest extends JerseyTest {
         Entity<BookingBatch> entity = Entity.entity(bookingBatch, MediaType.APPLICATION_JSON_TYPE);
 
         Response response = target("/booking/process").request(MediaType.APPLICATION_JSON_TYPE).post(entity);
-        List<GroupByDayBookingItem> responseBody = response.readEntity(new GenericType<List<GroupByDayBookingItem>>(){});
+        List<ResponseDayBookingItems> responseBody = response.readEntity(new GenericType<List<ResponseDayBookingItems>>(){});
 
         assertEquals(responseBody.size(),2);
-        assertEquals(responseBody.get(0).getBookingItems().get(0), new BookingItemResponse(bookingItem1));
-        assertEquals(responseBody.get(0).getBookingItems().get(1), new BookingItemResponse(bookingItem2));
-        assertEquals(responseBody.get(1).getBookingItems().get(0), new BookingItemResponse(bookingItem3));
+        assertEquals(responseBody.get(0).getResponseBookingItems().get(0), new ResponseBookingItem(bookingItem1));
+        assertEquals(responseBody.get(0).getResponseBookingItems().get(1), new ResponseBookingItem(bookingItem2));
+        assertEquals(responseBody.get(1).getResponseBookingItems().get(0), new ResponseBookingItem(bookingItem3));
     }
 
     @Override
     protected Application configure() {
         return new ResourceConfig() {
             {
-                register(new ApplicationBinder());
                 register(BookingResource.class);
+                register(new ApplicationBinder());
                 enable(TestProperties.LOG_TRAFFIC);
                 enable(TestProperties.DUMP_ENTITY);
             }

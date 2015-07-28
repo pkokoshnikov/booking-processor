@@ -1,8 +1,7 @@
 package com.pkokoshnikov.bookingservice.process;
 
-import com.pkokoshnikov.bookingservice.model.BookingBatch;
-import com.pkokoshnikov.bookingservice.model.GroupByDayBookingItem;
-import com.pkokoshnikov.bookingservice.model.ResponseView;
+import com.pkokoshnikov.bookingservice.model.request.BookingBatch;
+import com.pkokoshnikov.bookingservice.model.request.BookingItem;
 
 import java.util.List;
 
@@ -11,6 +10,6 @@ import java.util.List;
  * Date: 08.07.15
  * This interface provides method for processing of batch meetings
  */
-public interface BookingProcessor<T extends ResponseView> {
-    List<T> processBatch(BookingBatch bookingBatch);
+public interface BookingProcessor {
+    List<BookingItem> processBatch(BookingBatch bookingBatch);
 }

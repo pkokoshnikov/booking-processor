@@ -1,4 +1,4 @@
-package com.pkokoshnikov.bookingservice.model;
+package com.pkokoshnikov.bookingservice.model.request;
 
 import java.io.Serializable;
 import java.util.Arrays;

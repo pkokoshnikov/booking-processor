@@ -1,10 +1,8 @@
 package com.pkokoshnikov.bookingservice.process;
 
-import com.pkokoshnikov.bookingservice.model.BookingBatch;
-import com.pkokoshnikov.bookingservice.model.BookingItem;
-import com.pkokoshnikov.bookingservice.model.BookingItemResponse;
-import com.pkokoshnikov.bookingservice.model.GroupByDayBookingItem;
-import com.pkokoshnikov.bookingservice.util.formatters.Constants;
+import com.pkokoshnikov.bookingservice.model.request.BookingBatch;
+import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.util.date.formatter.DateConstants;
 import org.junit.*;
 
 
@@ -19,8 +17,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class BookingProcessorTest {
     private final BookingProcessor bookingProcessor = new BookingProcessorImpl();
-    private final SimpleDateFormat requestTimeSubmissionFormatter = new SimpleDateFormat(Constants.REQUEST_SUBMISSION_FORMAT);
-    private final SimpleDateFormat meetingStartDateFormatter = new SimpleDateFormat(Constants.MEETING_START_FORMAT);
+    private final SimpleDateFormat requestTimeSubmissionFormatter = new SimpleDateFormat(DateConstants.REQUEST_SUBMISSION_FORMAT);
+    private final SimpleDateFormat meetingStartDateFormatter = new SimpleDateFormat(DateConstants.MEETING_START_FORMAT);
 
     @Test
     public void testProcessSimpleBatch() throws ParseException {
@@ -32,12 +30,12 @@ public class BookingProcessorTest {
                 "EMP001", 3);
         BookingBatch bookingBatch = new BookingBatch("0900", "1700", new BookingItem[]{bookingItem1, bookingItem2, bookingItem3});
 
-        List<GroupByDayBookingItem> groupingItems = bookingProcessor.processBatch(bookingBatch);
+        List<BookingItem> bookingItems = bookingProcessor.processBatch(bookingBatch);
 
-        assertEquals(groupingItems.size(), 2);
-        assertEquals(groupingItems.get(0).getBookingItems().get(0), new BookingItemResponse(bookingItem1));
-        assertEquals(groupingItems.get(0).getBookingItems().get(1), new BookingItemResponse(bookingItem2));
-        assertEquals(groupingItems.get(1).getBookingItems().get(0), new BookingItemResponse(bookingItem3));
+        assertEquals(bookingItems.size(), 3);
+        assertEquals(bookingItems.get(0), bookingItem1);
+        assertEquals(bookingItems.get(1), bookingItem2);
+        assertEquals(bookingItems.get(2), bookingItem3);
     }
 
     @Test
@@ -48,11 +46,11 @@ public class BookingProcessorTest {
                 "EMP001", 2);
         BookingBatch bookingBatch = new BookingBatch("0900", "1700", new BookingItem[]{bookingItem1, bookingItem2});
 
-        List<GroupByDayBookingItem> groupingItems = bookingProcessor.processBatch(bookingBatch);
+        List<BookingItem> bookingItems = bookingProcessor.processBatch(bookingBatch);
 
-        assertEquals(groupingItems.size(), 2);
-        assertEquals(groupingItems.get(0).getBookingItems().get(0), new BookingItemResponse(bookingItem1));
-        assertEquals(groupingItems.get(1).getBookingItems().get(0), new BookingItemResponse(bookingItem2));
+        assertEquals(bookingItems.size(), 2);
+        assertEquals(bookingItems.get(0), bookingItem1);
+        assertEquals(bookingItems.get(1), bookingItem2);
     }
 
     @Test
@@ -63,10 +61,10 @@ public class BookingProcessorTest {
                 "EMP002", 2);
         BookingBatch bookingBatch = new BookingBatch("0900", "1700", new BookingItem[]{bookingItem1, bookingItem2});
 
-        List<GroupByDayBookingItem> groupingItems = bookingProcessor.processBatch(bookingBatch);
+        List<BookingItem> bookingItems = bookingProcessor.processBatch(bookingBatch);
 
-        assertEquals(groupingItems.size(), 1);
-        assertEquals(groupingItems.get(0).getBookingItems().get(0), new BookingItemResponse(bookingItem2));
+        assertEquals(bookingItems.size(), 1);
+        assertEquals(bookingItems.get(0), bookingItem2);
     }
 
     @Test
@@ -79,8 +77,8 @@ public class BookingProcessorTest {
                 "EMP003", 3);
         BookingBatch bookingBatch = new BookingBatch("0900", "1700", new BookingItem[]{bookingItem1, bookingItem2, bookingItem3});
 
-        List<GroupByDayBookingItem> groupingItems = bookingProcessor.processBatch(bookingBatch);
+        List<BookingItem> bookingItems = bookingProcessor.processBatch(bookingBatch);
 
-        assertEquals(groupingItems.size(), 0);
+        assertEquals(bookingItems.size(), 0);
     }
 }
