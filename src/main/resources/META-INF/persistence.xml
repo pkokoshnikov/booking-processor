@@ -13,7 +13,8 @@
             <property name="hibernate.connection.username" value="user"/>
             <property name="hibernate.connection.password" value="user01"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+
         </properties>
     </persistence-unit>
 </persistence>

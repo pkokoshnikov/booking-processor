@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
@@ -23,6 +24,13 @@ public class BookingItemDAO {
     public void addBookingItem(BookingItem bookingItem) {
         entityManager.getTransaction().begin();
         entityManager.persist(bookingItem);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public void addBookingItems(List<BookingItem> bookingItem) {
+        entityManager.getTransaction().begin();
+        bookingItem.stream().forEach(item -> entityManager.persist(item));
         entityManager.getTransaction().commit();
         entityManager.close();
     }

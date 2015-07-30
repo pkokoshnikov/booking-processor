@@ -7,7 +7,6 @@ import com.pkokoshnikov.bookingservice.model.response.ResponseDayBookingItems;
 import com.pkokoshnikov.bookingservice.process.BookingProcessor;
 import com.pkokoshnikov.bookingservice.process.ResponsePacker;
 import org.apache.log4j.Logger;
-import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -23,7 +22,6 @@ import java.util.List;
 @Path("/booking")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Service
 public class BookingResource {
 
     final static Logger logger = Logger.getLogger(BookingResource.class);
@@ -49,6 +47,7 @@ public class BookingResource {
         logger.debug(bookingBatch);
 
         List<BookingItem> bookingItems = bookingProcessor.processBatch(bookingBatch);
+        bookingItemDAO.addBookingItems(bookingItems);
         List<ResponseDayBookingItems> responseDayItems = responsePacker.packResponse(bookingItems);
 
         logger.debug(responseDayItems);

@@ -57,7 +57,7 @@
                 textArea.val('');
                 for(var i = 0; i < data.length; i++) {
                     textArea.val(textArea.val() + data[i].dateOfMeeting + '\n');
-                    var bookingItems = data[i].bookingItems;
+                    var bookingItems = data[i].responseBookingItems;
                     for(var j = 0; j < bookingItems.length; j++) {
                         textArea.val(textArea.val() + bookingItems[j].meetingStartTime + ' ' + bookingItems[j].meetingEndTime + ' ' + bookingItems[j].userId + '\n');
                     }
