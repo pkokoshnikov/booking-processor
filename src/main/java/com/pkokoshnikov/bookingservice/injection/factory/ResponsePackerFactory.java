@@ -1,7 +1,8 @@
 package com.pkokoshnikov.bookingservice.injection.factory;
 
-import com.pkokoshnikov.bookingservice.process.GroupByDayPacker;
-import com.pkokoshnikov.bookingservice.process.ResponsePacker;
+
+import com.pkokoshnikov.bookingservice.process.response.GroupByDayPacker;
+import com.pkokoshnikov.bookingservice.process.response.ResponsePacker;
 import org.glassfish.hk2.api.Factory;
 
 /**

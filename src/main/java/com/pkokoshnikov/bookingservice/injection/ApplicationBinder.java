@@ -5,7 +5,7 @@ import com.pkokoshnikov.bookingservice.injection.factory.BookingProcessorFactory
 import com.pkokoshnikov.bookingservice.injection.factory.PersistenceFactory;
 import com.pkokoshnikov.bookingservice.injection.factory.ResponsePackerFactory;
 import com.pkokoshnikov.bookingservice.process.BookingProcessor;
-import com.pkokoshnikov.bookingservice.process.ResponsePacker;
+import com.pkokoshnikov.bookingservice.process.response.ResponsePacker;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 import javax.persistence.EntityManager;

@@ -30,13 +30,13 @@ public class BookingItem implements Serializable{
     private long id;
 
     @Column(name ="request_time")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonDeserialize(using = RequestSubmissionDateDeserializer.class)
     @JsonSerialize(using = RequestSubmissionDateSerializer.class)
     private Date requestSubmissionTime;
 
     @Column(name ="meeting_time")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonSerialize(using = MeetingStartDateSerializer.class)
     @JsonDeserialize(using = MeetingStartDateDeserializer.class)
     private Date meetingStartTime;

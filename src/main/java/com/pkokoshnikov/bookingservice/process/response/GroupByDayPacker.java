@@ -1,7 +1,7 @@
-package com.pkokoshnikov.bookingservice.process;
+package com.pkokoshnikov.bookingservice.process.response;
 
 import com.pkokoshnikov.bookingservice.model.request.BookingItem;
-import com.pkokoshnikov.bookingservice.model.response.ResponseDayBookingItems;
+import com.pkokoshnikov.bookingservice.process.response.data.ResponseDayBookingItems;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.ArrayList;

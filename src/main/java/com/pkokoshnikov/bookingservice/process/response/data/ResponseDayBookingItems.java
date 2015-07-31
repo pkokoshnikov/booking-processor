@@ -1,4 +1,4 @@
-package com.pkokoshnikov.bookingservice.model.response;
+package com.pkokoshnikov.bookingservice.process.response.data;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pkokoshnikov.bookingservice.model.request.BookingItem;

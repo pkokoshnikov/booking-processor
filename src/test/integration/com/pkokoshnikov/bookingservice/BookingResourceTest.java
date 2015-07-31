@@ -1,11 +1,11 @@
-package com.pkokoshnikov.bookingservice;
+package integration.com.pkokoshnikov.bookingservice;
 
 
 import com.pkokoshnikov.bookingservice.injection.ApplicationBinder;
 import com.pkokoshnikov.bookingservice.model.request.BookingBatch;
 import com.pkokoshnikov.bookingservice.model.request.BookingItem;
-import com.pkokoshnikov.bookingservice.model.response.ResponseDayBookingItems;
-import com.pkokoshnikov.bookingservice.model.response.ResponseBookingItem;
+import com.pkokoshnikov.bookingservice.process.response.data.ResponseDayBookingItems;
+import com.pkokoshnikov.bookingservice.process.response.data.ResponseBookingItem;
 import com.pkokoshnikov.bookingservice.resource.BookingResource;
 import com.pkokoshnikov.bookingservice.util.date.formatter.DateConstants;
 import org.glassfish.jersey.server.ResourceConfig;

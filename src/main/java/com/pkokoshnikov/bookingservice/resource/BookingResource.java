@@ -3,9 +3,9 @@ package com.pkokoshnikov.bookingservice.resource;
 import com.pkokoshnikov.bookingservice.dao.BookingItemDAO;
 import com.pkokoshnikov.bookingservice.model.request.BookingBatch;
 import com.pkokoshnikov.bookingservice.model.request.BookingItem;
-import com.pkokoshnikov.bookingservice.model.response.ResponseDayBookingItems;
+import com.pkokoshnikov.bookingservice.process.response.data.ResponseDayBookingItems;
 import com.pkokoshnikov.bookingservice.process.BookingProcessor;
-import com.pkokoshnikov.bookingservice.process.ResponsePacker;
+import com.pkokoshnikov.bookingservice.process.response.ResponsePacker;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
