@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pkokoshnikov</groupId>
-    <artifactId>booking-service</artifactId>
+    <artifactId>booking-processor</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>booking-service</name>
