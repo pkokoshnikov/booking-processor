@@ -1,24 +1,40 @@
 package com.pkokoshnikov.bookingservice.process;
 
-import com.pkokoshnikov.bookingservice.model.request.BookingBatch;
-import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.dao.PropertiesDAOImpl;
+import com.pkokoshnikov.bookingservice.model.BookingBatch;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
+
+import com.pkokoshnikov.bookingservice.model.Property;
 import com.pkokoshnikov.bookingservice.util.date.formatter.DateConstants;
 import org.junit.*;
+import org.mockito.Mockito;
 
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by pavel on 12.07.2015.
  */
+
 public class BookingProcessorTest {
-    private final BookingProcessor bookingProcessor = new BookingProcessorImpl();
+    private BookingProcessor bookingProcessor;
+
     private final SimpleDateFormat requestTimeSubmissionFormatter = new SimpleDateFormat(DateConstants.REQUEST_SUBMISSION_FORMAT);
     private final SimpleDateFormat meetingStartDateFormatter = new SimpleDateFormat(DateConstants.MEETING_START_FORMAT);
+
+    @Before
+    public void init() {
+        PropertiesDAOImpl propertiesDAO = Mockito.mock(PropertiesDAOImpl.class);
+        when(propertiesDAO.findPropertyByName("startWorkTime")).thenReturn(new Property("startWorkTime", "0900"));
+        when(propertiesDAO.findPropertyByName("endWorkTime")).thenReturn(new Property("endWorkTime", "1730"));
+        bookingProcessor = new BookingProcessorImpl(propertiesDAO, );
+    }
 
     @Test
     public void testProcessSimpleBatch() throws ParseException {

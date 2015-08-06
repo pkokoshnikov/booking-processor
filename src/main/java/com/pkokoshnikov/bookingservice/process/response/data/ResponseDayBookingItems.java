@@ -1,7 +1,7 @@
 package com.pkokoshnikov.bookingservice.process.response.data;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.util.date.formatter.ResponseMetingDateSerializer;
 
 import java.io.Serializable;

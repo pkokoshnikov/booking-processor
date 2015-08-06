@@ -1,8 +1,8 @@
 package com.pkokoshnikov.bookingservice.resource;
 
 import com.pkokoshnikov.bookingservice.dao.BookingItemDAO;
-import com.pkokoshnikov.bookingservice.model.request.BookingBatch;
-import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.model.BookingBatch;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.process.response.data.ResponseDayBookingItems;
 import com.pkokoshnikov.bookingservice.process.BookingProcessor;
 import com.pkokoshnikov.bookingservice.process.response.ResponsePacker;
@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 import java.util.List;
 
 
@@ -26,27 +27,25 @@ public class BookingResource {
 
     final static Logger logger = Logger.getLogger(BookingResource.class);
 
-    private final BookingProcessor bookingProcessor;
+    private final BookingProcessor bookingService;
     private final BookingItemDAO bookingItemDAO;
     private final ResponsePacker responsePacker;
 
 
     @Inject
     public BookingResource(BookingProcessor bookingProcessor, BookingItemDAO bookingItemDAO, ResponsePacker responsePacker) {
-        this.bookingProcessor = bookingProcessor;
+        this.bookingService = bookingProcessor;
         this.bookingItemDAO = bookingItemDAO;
         this.responsePacker = responsePacker;
     }
 
     @POST
     @Path("/process")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public List<ResponseDayBookingItems> doProcessOfBatchBookingRequest(BookingBatch bookingBatch) {
-        logger.info("doProcessOfBatchBookingRequest");
+    public List<ResponseDayBookingItems> processBatch(BookingBatch bookingBatch) {
+        logger.info("processBatch");
         logger.debug(bookingBatch);
 
-        List<BookingItem> bookingItems = bookingProcessor.processBatch(bookingBatch);
+        List<BookingItem> bookingItems = bookingService.processBatch(bookingBatch);
         bookingItemDAO.addBookingItems(bookingItems);
         List<ResponseDayBookingItems> responseDayItems = responsePacker.packResponse(bookingItems);
 
@@ -55,9 +54,37 @@ public class BookingResource {
         return responseDayItems;
     }
 
+    @POST
+    @Path("/addItem")
+    public Long processBookingItem(BookingItem bookingItem) {
+        logger.info("processBookingItem");
+        logger.debug(bookingItem);
+        bookingItemDAO.addBookingItem(bookingItem);
+
+        return bookingItem.getId();
+    }
+/*
+    @GET
+    @Path("/findByDay")
+    public BookingItem getBookingItemsByDay(@QueryParam("day")Date date) {
+        logger.info("getBookingItem");
+        BookingItem foundItem = bookingItemDAO.findBookingItem(itemId);
+
+        return foundItem;
+    }*/
+
+    @GET
+    @Path("/findByUser")
+    public BookingItem getBookingItemsByUser(@QueryParam("userId")Long itemId) {
+        logger.info("getBookingItem");
+        BookingItem foundItem = bookingItemDAO.findBookingItem(itemId);
+
+        return foundItem;
+    }
+
+
     @GET
     @Path("/status")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getStatusService() {
         logger.info("getStatusService");
         return Response.ok().entity("Ok").status(Response.Status.OK).build();

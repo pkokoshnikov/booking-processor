@@ -1,70 +1,26 @@
 package com.pkokoshnikov.bookingservice.dao;
 
-import com.pkokoshnikov.bookingservice.model.request.BookingItem;
-import org.apache.log4j.Logger;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.Date;
 import java.util.List;
 
 /**
  * User: pako1113
- * Date: 24.07.15
+ * Date: 03.08.15
  */
-public class BookingItemDAO {
-    final static Logger logger = Logger.getLogger(BookingItemDAO.class);
-    private final EntityManager entityManager;
+public interface BookingItemDAO {
+    void addBookingItem(BookingItem bookingItem);
 
-    @Inject
-    public BookingItemDAO(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    void addBookingItems(List<BookingItem> bookingItem);
 
-    public void addBookingItem(BookingItem bookingItem) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(bookingItem);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-    }
+    void deleteBookingItem(BookingItem bookingItem);
 
-    public void addBookingItems(List<BookingItem> bookingItem) {
-        entityManager.getTransaction().begin();
-        bookingItem.stream().forEach(item -> entityManager.persist(item));
-        entityManager.getTransaction().commit();
-        entityManager.close();
-    }
+    void updateBookingItem(BookingItem bookingItem);
 
-    public void deleteBookingItem(BookingItem bookingItem) {
-        entityManager.getTransaction().begin();
-        entityManager.remove(bookingItem);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-    }
+    BookingItem findBookingItem(long id);
 
-    public void updateBookingItem(BookingItem bookingItem) {
-        entityManager.getTransaction().begin();
-        entityManager.merge(bookingItem);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-    }
+    List<BookingItem> findBookingItemsByDate(Date date);
 
-    public BookingItem findBookingItem(long id){
-        entityManager.getTransaction().begin();
-        BookingItem bookingItem = entityManager.find(BookingItem.class, id);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-
-        return bookingItem;
-    }
-
-    public List<BookingItem> findBookingItemsByUserId(String userId) {
-        entityManager.getTransaction().begin();
-        List<BookingItem> bookingItems = entityManager.createNamedQuery("BookingItem.findByUserId", BookingItem.class)
-                .setParameter("userId", userId).getResultList();
-        entityManager.getTransaction().commit();
-        entityManager.close();
-
-        return bookingItems;
-    }
+    List<BookingItem> findBookingItemsByUserId(String userId);
 }

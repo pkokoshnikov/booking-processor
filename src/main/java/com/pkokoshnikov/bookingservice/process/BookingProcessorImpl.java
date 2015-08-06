@@ -1,12 +1,15 @@
 package com.pkokoshnikov.bookingservice.process;
 
-import com.pkokoshnikov.bookingservice.model.request.BookingBatch;
-import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.dao.BookingItemDAO;
+import com.pkokoshnikov.bookingservice.dao.PropertiesDAO;
+import com.pkokoshnikov.bookingservice.model.BookingBatch;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.util.BookingUtils;
 import com.pkokoshnikov.bookingservice.util.comparators.MeetingStartTimeComparator;
 import com.pkokoshnikov.bookingservice.util.comparators.RequestSubmissionTimeComparator;
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,16 +19,24 @@ import java.util.stream.Stream;
  * Date: 08.07.15
  */
 public class BookingProcessorImpl implements BookingProcessor {
-    final static Logger logger = Logger.getLogger(BookingProcessorImpl.class);
-    final Calendar cal = Calendar.getInstance();
+    private final static Logger logger = Logger.getLogger(BookingProcessorImpl.class);
+    private final Calendar cal = Calendar.getInstance();
+    private final PropertiesDAO propertiesDAO;
+    private final BookingItemDAO bookingItemDAO;
+
+    @Inject
+    public BookingProcessorImpl(PropertiesDAO propertiesDAO, BookingItemDAO bookingItemDAO) {
+        this.propertiesDAO = propertiesDAO;
+        this.bookingItemDAO = bookingItemDAO;
+    }
 
     @Override
     public List<BookingItem> processBatch(final BookingBatch bookingBatch) {
         logger.info("processBatch");
         
         List<BookingItem> bookingItems = Arrays.asList(bookingBatch.getBookingItems());        
-        String startOfWorkDay = bookingBatch.getStartOfWorkDay();
-        String endOfWorkDay = bookingBatch.getEndOfWorkDay();
+        String startOfWorkDay = propertiesDAO.findPropertyByName("startWorkTime").getValue();
+        String endOfWorkDay = propertiesDAO.findPropertyByName("endWorkTime").getValue();
 
         //filter bookingItems by work hours and then sort it by request submission time
         Stream<BookingItem> preparedStream = bookingItems.stream().filter(item -> isWorkingHoursMeeting(item, startOfWorkDay, endOfWorkDay))

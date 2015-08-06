@@ -1,6 +1,6 @@
 package com.pkokoshnikov.bookingservice.process.response;
 
-import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.process.response.data.ResponseDayBookingItems;
 import org.apache.commons.lang3.time.DateUtils;
 

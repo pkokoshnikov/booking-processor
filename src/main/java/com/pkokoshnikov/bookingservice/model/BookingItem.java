@@ -1,4 +1,4 @@
-package com.pkokoshnikov.bookingservice.model.request;
+package com.pkokoshnikov.bookingservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -21,7 +21,8 @@ import java.util.Date;
 @Table(name = "bookings")
 @NamedQueries({
     @NamedQuery(name="BookingItem.findAll", query="SELECT bi FROM BookingItem bi"),
-    @NamedQuery(name="BookingItem.findByUserId", query="SELECT bi FROM BookingItem bi WHERE bi.userId = :userId")
+    @NamedQuery(name="BookingItem.findByUserId", query="SELECT bi FROM BookingItem bi WHERE bi.userId = :userId"),
+    @NamedQuery(name="BookingItem.findByDate", query="SELECT bi FROM BookingItem bi WHERE bi.meetingStartTime = :userId")
 })
 @JsonIgnoreProperties({"id"})
 public class BookingItem implements Serializable{

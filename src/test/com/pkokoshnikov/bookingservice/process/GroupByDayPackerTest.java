@@ -1,7 +1,7 @@
 package com.pkokoshnikov.bookingservice.process;
 
 import com.google.common.collect.Lists;
-import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.process.response.GroupByDayPacker;
 import com.pkokoshnikov.bookingservice.process.response.data.ResponseBookingItem;
 import com.pkokoshnikov.bookingservice.process.response.data.ResponseDayBookingItems;

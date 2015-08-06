@@ -1,6 +1,6 @@
 package com.pkokoshnikov.bookingservice.process.response.data;
 
-import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.util.BookingUtils;
 import com.pkokoshnikov.bookingservice.util.date.formatter.DateConstants;
 

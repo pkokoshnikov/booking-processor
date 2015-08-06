@@ -11,13 +11,14 @@ import javax.persistence.Persistence;
  */
 public class PersistenceFactory implements Factory<EntityManager>{
 
+    private EntityManager entityManager = Persistence.createEntityManagerFactory("com.pkokoshnikov.bookingservice").createEntityManager();
     @Override
     public EntityManager provide() {
-        return Persistence.createEntityManagerFactory("com.pkokoshnikov.bookingservice").createEntityManager();
+        return entityManager;
     }
 
     @Override
     public void dispose(EntityManager entityManagerFactory) {
-
+        entityManager.close();
     }
 }

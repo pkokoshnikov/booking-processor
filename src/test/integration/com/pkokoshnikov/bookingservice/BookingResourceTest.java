@@ -1,9 +1,8 @@
 package integration.com.pkokoshnikov.bookingservice;
 
-
 import com.pkokoshnikov.bookingservice.injection.ApplicationBinder;
-import com.pkokoshnikov.bookingservice.model.request.BookingBatch;
-import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.model.BookingBatch;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.process.response.data.ResponseDayBookingItems;
 import com.pkokoshnikov.bookingservice.process.response.data.ResponseBookingItem;
 import com.pkokoshnikov.bookingservice.resource.BookingResource;
@@ -58,6 +57,24 @@ public class BookingResourceTest extends JerseyTest {
         assertEquals(responseBody.get(0).getResponseBookingItems().get(0), new ResponseBookingItem(bookingItem1));
         assertEquals(responseBody.get(0).getResponseBookingItems().get(1), new ResponseBookingItem(bookingItem2));
         assertEquals(responseBody.get(1).getResponseBookingItems().get(0), new ResponseBookingItem(bookingItem3));
+    }
+
+    @Ignore
+    @Test
+    public void addAndGetBookingItemTest() throws ParseException {
+        BookingItem bookingItem1 = new BookingItem(requestTimeSubmissionFormatter.parse("2011-03-17 10:17:06"), meetingStartDateFormatter.parse("2011-03-21 09:00"),
+                "EMP001", 2);
+        Entity<BookingItem> entity = Entity.entity(bookingItem1, MediaType.APPLICATION_JSON_TYPE);
+        Response response = target("/booking/add").request(MediaType.APPLICATION_JSON_TYPE).post(entity);
+
+        Long responseId = response.readEntity(new GenericType<Long>() { });
+
+        assertEquals(response.getStatus(), 200);
+        assertEquals(responseId, Long.valueOf(1));
+
+        response = target("/booking/find").queryParam("itemId", responseId).request(MediaType.APPLICATION_JSON_TYPE).get();
+        BookingItem bookingItem = response.readEntity(new GenericType<BookingItem>(){});
+        assertEquals(bookingItem1, bookingItem);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.pkokoshnikov.bookingservice.util;
 
-import com.pkokoshnikov.bookingservice.model.request.BookingItem;
+import com.pkokoshnikov.bookingservice.model.BookingItem;
 
 import java.util.Date;
 
