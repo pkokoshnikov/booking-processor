@@ -1,69 +1,52 @@
 package com.pkokoshnikov.bookingservice.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pkokoshnikov.bookingservice.util.formatters.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.pkokoshnikov.bookingservice.util.Constants;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
- * User: pako1113
+ * User: pako
  * Date: 07.07.15
  * This class provides POJO model for booking items
  */
-public class BookingItem implements Serializable{
-    @JsonDeserialize(using = RequestSubmissionDateDeserializer.class)
-    @JsonSerialize(using = RequestSubmissionDateSerializer.class)
-    private Date requestSubmissionTime;
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@EqualsAndHashCode
+@Entity
+public class BookingItem implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @JsonSerialize(using = MeetingStartDateSerializer.class)
-    @JsonDeserialize(using = MeetingStartDateDeserializer.class)
-    private Date meetingStartTime;
+    @JsonFormat(pattern = Constants.REQUEST_SUBMISSION_FORMAT)
+    private LocalDateTime requestSubmissionTime;
+
+    @JsonFormat(pattern = Constants.MEETING_START_FORMAT)
+    private LocalDateTime meetingStartTime;
 
     private String userId;
     private Integer duration;
 
-    public BookingItem(Date requestSubmissionTime, Date meetingStartTime, String userId, Integer duration) {
+    public BookingItem(LocalDateTime requestSubmissionTime, LocalDateTime meetingStartTime, String userId,
+                       Integer duration) {
         this.requestSubmissionTime = requestSubmissionTime;
         this.meetingStartTime = meetingStartTime;
         this.userId = userId;
         this.duration = duration;
     }
 
-    public BookingItem() {
-    }
-
-    public Date getRequestSubmissionTime() {
-        return requestSubmissionTime;
-    }
-
-    public void setRequestSubmissionTime(Date requestSubmissionTime) {
-        this.requestSubmissionTime = requestSubmissionTime;
-    }
-
-    public Date getMeetingStartTime() {
-        return meetingStartTime;
-    }
-
-    public void setMeetingStartTime(Date meetingStartTime) {
-        this.meetingStartTime = meetingStartTime;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
+    public LocalDateTime getMeetingEndTime() {
+        return meetingStartTime.plusHours(duration);
     }
 
     @Override
@@ -74,36 +57,5 @@ public class BookingItem implements Serializable{
                 ", userId='" + userId + '\'' +
                 ", duration=" + duration +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BookingItem that = (BookingItem) o;
-
-        if (duration != null ? !duration.equals(that.duration) : that.duration != null) return false;
-        if (meetingStartTime != null ? !meetingStartTime.equals(that.meetingStartTime) : that.meetingStartTime != null)
-            return false;
-        if (requestSubmissionTime != null ? !requestSubmissionTime.equals(that.requestSubmissionTime) : that.requestSubmissionTime != null)
-            return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = requestSubmissionTime != null ? requestSubmissionTime.hashCode() : 0;
-        result = 31 * result + (meetingStartTime != null ? meetingStartTime.hashCode() : 0);
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
-        result = 31 * result + (duration != null ? duration.hashCode() : 0);
-        return result;
-    }
-
-    public class Views {
-        public class Public{}
-        public class Extended{}
     }
 }

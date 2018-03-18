@@ -2,16 +2,27 @@
 <html>
 <head>
     <title>Testing page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="/bookingservice.js"></script>
     <script>
         $(document).ready(function () {
             $('#showStatusButton').click(function () {
                 $.ajax({
-                    url: '/webapi/booking/status',
+                    url: '/api/booking/status',
                     type: 'GET',
-                    success: function (data) {
-                        alert(data);
+                    success: function () {
+                        alert("status is ok");
                     },
                     error: function (xhr, status, error) {
                         alert(xhr.responseText)
@@ -20,14 +31,31 @@
             });
 
             $('#postBatches').click(function () {
-
-                var bookingBatch = parseTextArea();
-                console.log(bookingBatch);
+                var bookingRequest = parseTextArea();
+                console.log(bookingRequest);
                 $.ajax({
                     type: 'POST',
                     contentType: "application/json",
-                    url: '/webapi/booking/process',
-                    data: JSON.stringify(bookingBatch),
+                    url: '/api/booking/process',
+                    data: JSON.stringify(bookingRequest),
+                    dataType: "json",
+                    success: function (data) {
+                        printId(data);
+                        printResult(data);
+                    },
+                    error: function (xhr, status, error) {
+                        alert(xhr.responseText)
+                    }
+                });
+            });
+
+            $('#getBooking').click(function () {
+                var bookingId = $('#bookingIdInput').val();
+                console.log(bookingId);
+                $.ajax({
+                    type: 'GET',
+                    contentType: "application/json",
+                    url: '/api/booking/' + bookingId,
                     dataType: "json",
                     success: function (data) {
                         printResult(data);
@@ -52,24 +80,35 @@
                 return new BookingBatch(workHours[0], workHours[1], bookingItems);
             }
 
+            function printId(data) {
+                var textId = $('#bookingId');
+//                textId.text('');
+                textId.text(data['id']);
+            }
+
             function printResult(data) {
                 var textArea = $('#successMeetings');
                 textArea.val('');
-                for(var i = 0; i < data.length; i++) {
-                    textArea.val(textArea.val() + data[i].dateOfMeeting + '\n');
-                    var bookingItems = data[i].bookingItems;
-                    for(var j = 0; j < bookingItems.length; j++) {
-                        textArea.val(textArea.val() + bookingItems[j].meetingStartTime + ' ' + bookingItems[j].meetingEndTime + ' ' + bookingItems[j].userId + '\n');
+                var bookings = data['result'];
+                for (var key in bookings) {
+                    textArea.val(textArea.val() + key + '\n\n');
+                    var bookingItems = bookings[key];
+                    for (var i = 0; i < bookingItems.length; i++) {
+                        textArea.val(textArea.val() + bookingItems[i].meetingStartTime + ' ' + bookingItems[i].meetingEndTime + '\n' + bookingItems[i].userId + '\n\n');
                     }
-                };
+                }
             }
         });
     </script>
 </head>
-<body>
-<button style="margin-bottom: 20px" id="showStatusButton" href="#" onclick="">Show status</button>
-<br/>
-<textarea style="margin-bottom: 20px" id="meetingBatch" name="batch" cols="40" rows="10">
+<body style="font-size: 0.8em">
+<div class="container">
+    <h1>Test booking page</h1>
+    <div class="row">
+        <div class="col-4">
+            <button id="postBatches" href="#" onclick="">Post Batches</button>
+            <div style="margin-bottom: 10px; margin-top: 10px; height: 25px">Booking id: <span id="bookingId"></span></div>
+            <textarea id="meetingBatch" name="batch" cols="40" style="height: 400px">
 0900 1730
 2011-03-17 10:17:06 EMP001
 2011-03-21 09:00 2
@@ -81,10 +120,14 @@
 2011-03-22 16:00 1
 2011-03-15 17:29:12 EMP005
 2011-03-21 16:00 3
-</textarea>
-<br/>
-<button style="margin-bottom: 20px" id="postBatches" href="#" onclick="">Post Batches</button>
-<br/>
-<textarea  id="successMeetings" name="success" cols="40" rows="10"></textarea>
+            </textarea>
+        </div>
+        <div class="col-4">
+            <button id="getBooking" href="#" onclick="">Get booking by</button>
+            <div style="margin-bottom: 10px; margin-top: 10px">Booking id: <input id="bookingIdInput" type="text"/></div>
+            <textarea id="successMeetings" name="success" cols="40" style="height: 400px"></textarea>
+        </div>
+    </div>
+</div>
 </body>
 </html>
