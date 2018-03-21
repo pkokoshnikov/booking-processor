@@ -36,6 +36,46 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <attachClasses>true</attachClasses>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.24.0</version>
+                <configuration>
+                    <watchInterval>500</watchInterval>
+                    <logDate>default</logDate>
+                    <verbose>true</verbose>
+                    <images>
+                        <image>
+                            <name>${project.artifactId}</name>
+                            <registry>registry.io</registry>
+                            <build>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                </tags>
+                                <from>java:8</from>
+                                <assembly>
+                                    <mode>dir</mode>
+                                    <basedir>/opt</basedir>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                                <entryPoint>java -jar /opt/*.war</entryPoint>
+                            </build>
+                            <run>
+                                <ports>
+                                    <port>8080:8080</port>
+                                </ports>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

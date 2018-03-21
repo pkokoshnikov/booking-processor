@@ -1,0 +1,14 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: Booking Processor
+  h2:
+    console:
+      enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
