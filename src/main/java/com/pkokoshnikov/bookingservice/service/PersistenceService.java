@@ -9,9 +9,7 @@ import lombok.NonNull;
  * This service provides persistence store for booking history
  */
 public interface PersistenceService {
-    @NonNull
-    ApprovedBooking getLastApprovedBooking();
+    @NonNull ApprovedBooking getLastApprovedBooking();
     @NonNull Long storeApprovedBookings(@NonNull ApprovedBooking approvedBooking);
-    @NonNull
-    ApprovedBooking getApprovedBooking(@NonNull Long id);
+    @NonNull ApprovedBooking getApprovedBooking(@NonNull Long id);
 }
