@@ -1,0 +1,27 @@
+version: '3'
+services:
+  booking-service:
+    build:
+      context: /Users/pako/work/repositories/booking-processor
+      args:
+        WAR_FILE: booking-processor.war
+    image: pako/booking-processor:latest
+    ports:
+      - 8080:8080
+    networks:
+      - booking-network
+    depends_on:
+      - database
+  database:
+    image: postgres:9.6
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: db
+    networks:
+      - booking-network
+networks:
+  booking-network:
+    driver: bridge

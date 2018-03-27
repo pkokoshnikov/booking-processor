@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 @Entity
 public class BookingItem implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonFormat(pattern = Constants.REQUEST_SUBMISSION_FORMAT)
