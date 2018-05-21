@@ -1,7 +1,7 @@
 package com.pkokoshnikov.bookingservice.service;
 
-import com.pkokoshnikov.bookingservice.model.BookingItem;
-import com.pkokoshnikov.bookingservice.controller.model.response.BookingItemResponse;
+import com.pkokoshnikov.bookingservice.persistence.data.BookingItem;
+import com.pkokoshnikov.bookingservice.controller.data.response.BookingItemResponse;
 import lombok.NonNull;
 
 import java.time.LocalDate;

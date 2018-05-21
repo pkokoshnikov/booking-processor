@@ -1,6 +1,6 @@
 package com.pkokoshnikov.bookingservice.util.matcher;
 
-import com.pkokoshnikov.bookingservice.controller.model.response.BookingItemResponse;
+import com.pkokoshnikov.bookingservice.controller.data.response.BookingItemResponse;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 

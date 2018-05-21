@@ -1,4 +1,4 @@
-package com.pkokoshnikov.bookingservice.model;
+package com.pkokoshnikov.bookingservice.persistence.data;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,9 +28,9 @@ public class ApprovedBooking {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "approved_booking_id")
-    private List<BookingItem> bookingItems;
+    private List<BookingItem> bookingItems = new ArrayList<>();
 
     public ApprovedBooking(List<BookingItem> bookingItems) {
-        this.bookingItems = bookingItems;
+        this.bookingItems.addAll(bookingItems);
     }
 }

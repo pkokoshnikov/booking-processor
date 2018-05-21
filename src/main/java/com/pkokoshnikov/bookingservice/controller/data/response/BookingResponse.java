@@ -1,4 +1,4 @@
-package com.pkokoshnikov.bookingservice.controller.model.response;
+package com.pkokoshnikov.bookingservice.controller.data.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

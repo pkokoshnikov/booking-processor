@@ -1,6 +1,6 @@
 package com.pkokoshnikov.bookingservice.persistence;
 
-import com.pkokoshnikov.bookingservice.model.ApprovedBooking;
+import com.pkokoshnikov.bookingservice.persistence.data.ApprovedBooking;
 import com.pkokoshnikov.bookingservice.service.PersistenceService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;

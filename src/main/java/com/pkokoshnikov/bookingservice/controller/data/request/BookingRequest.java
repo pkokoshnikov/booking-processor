@@ -1,7 +1,6 @@
-package com.pkokoshnikov.bookingservice.controller.model.request;
+package com.pkokoshnikov.bookingservice.controller.data.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.pkokoshnikov.bookingservice.model.BookingItem;
 import com.pkokoshnikov.bookingservice.util.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,5 +23,5 @@ public class BookingRequest implements Serializable {
     private LocalTime startOfWorkDay;
     @JsonFormat(pattern = Constants.REQUEST_WORK_HOURS_FORMAT)
     private LocalTime endOfWorkDay;
-    private List<BookingItem> bookingItems;
+    private List<BookingItemRequest> bookingItemRequests;
 }

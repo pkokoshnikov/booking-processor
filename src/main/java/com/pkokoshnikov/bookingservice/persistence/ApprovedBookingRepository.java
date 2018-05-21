@@ -1,6 +1,6 @@
 package com.pkokoshnikov.bookingservice.persistence;
 
-import com.pkokoshnikov.bookingservice.model.ApprovedBooking;
+import com.pkokoshnikov.bookingservice.persistence.data.ApprovedBooking;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

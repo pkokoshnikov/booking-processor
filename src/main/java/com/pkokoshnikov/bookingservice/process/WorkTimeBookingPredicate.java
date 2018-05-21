@@ -1,6 +1,6 @@
 package com.pkokoshnikov.bookingservice.process;
 
-import com.pkokoshnikov.bookingservice.model.BookingItem;
+import com.pkokoshnikov.bookingservice.persistence.data.BookingItem;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

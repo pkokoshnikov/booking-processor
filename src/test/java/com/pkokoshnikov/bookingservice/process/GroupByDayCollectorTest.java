@@ -1,7 +1,7 @@
 package com.pkokoshnikov.bookingservice.process;
 
-import com.pkokoshnikov.bookingservice.model.BookingItem;
-import com.pkokoshnikov.bookingservice.controller.model.response.BookingItemResponse;
+import com.pkokoshnikov.bookingservice.persistence.data.BookingItem;
+import com.pkokoshnikov.bookingservice.controller.data.response.BookingItemResponse;
 import org.junit.Test;
 
 import java.time.LocalDate;

@@ -1,7 +1,7 @@
-package com.pkokoshnikov.bookingservice.controller.model.response;
+package com.pkokoshnikov.bookingservice.controller.data.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.pkokoshnikov.bookingservice.model.BookingItem;
+import com.pkokoshnikov.bookingservice.persistence.data.BookingItem;
 import lombok.*;
 
 import java.time.LocalTime;

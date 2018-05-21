@@ -1,10 +1,11 @@
 package com.pkokoshnikov.bookingservice.integration;
 
-import com.pkokoshnikov.bookingservice.controller.model.request.BookingRequest;
-import com.pkokoshnikov.bookingservice.controller.model.response.BookingItemResponse;
-import com.pkokoshnikov.bookingservice.controller.model.response.BookingResponse;
-import com.pkokoshnikov.bookingservice.model.ApprovedBooking;
-import com.pkokoshnikov.bookingservice.model.BookingItem;
+import com.pkokoshnikov.bookingservice.controller.data.request.BookingItemRequest;
+import com.pkokoshnikov.bookingservice.controller.data.request.BookingRequest;
+import com.pkokoshnikov.bookingservice.controller.data.response.BookingItemResponse;
+import com.pkokoshnikov.bookingservice.controller.data.response.BookingResponse;
+import com.pkokoshnikov.bookingservice.persistence.data.ApprovedBooking;
+import com.pkokoshnikov.bookingservice.persistence.data.BookingItem;
 import com.pkokoshnikov.bookingservice.service.PersistenceService;
 import lombok.val;
 import org.junit.Test;
@@ -39,15 +40,15 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BookingControllerTest {
     private static final String EMP_001 = "EMP_001";
-    private static final BookingItem BOOKING_ITEM_0 = new BookingItem(LocalDateTime.of(2011, 3, 17, 10, 17, 6), LocalDateTime.of(2011, 3, 21, 10, 0),
+    private static final BookingItemRequest BOOKING_ITEM_0 = new BookingItemRequest(LocalDateTime.of(2011, 3, 17, 10, 17, 6), LocalDateTime.of(2011, 3, 21, 10, 0),
+                                                                             EMP_001, 2);
+    private static final BookingItemRequest BOOKING_ITEM_1 = new BookingItemRequest(LocalDateTime.of(2011, 3, 17, 10, 17, 6), LocalDateTime.of(2011, 3, 21, 9, 0),
                                                                       EMP_001, 2);
-    private static final BookingItem BOOKING_ITEM_1 = new BookingItem(LocalDateTime.of(2011, 3, 17, 10, 17, 6), LocalDateTime.of(2011, 3, 21, 9, 0),
-                                                                      EMP_001, 2);
-    private static final BookingItem BOOKING_ITEM_2 = new BookingItem(LocalDateTime.of(2011, 3, 17, 10, 17, 6), LocalDateTime.of(2011, 3, 22, 10, 0),
+    private static final BookingItemRequest BOOKING_ITEM_2 = new BookingItemRequest(LocalDateTime.of(2011, 3, 17, 10, 17, 6), LocalDateTime.of(2011, 3, 22, 10, 0),
                                                                       EMP_001, 1);
-    private static final BookingItem BOOKING_ITEM_3 = new BookingItem(LocalDateTime.of(2011, 3, 17, 10, 17, 6), LocalDateTime.of(2011, 3, 22, 16, 0),
+    private static final BookingItemRequest BOOKING_ITEM_3 = new BookingItemRequest(LocalDateTime.of(2011, 3, 17, 10, 17, 6), LocalDateTime.of(2011, 3, 22, 16, 0),
                                                                       EMP_001, 2);
-    private static final BookingItem BOOKING_ITEM_4 = new BookingItem(LocalDateTime.of(2011, 3, 17, 10, 17, 6), LocalDateTime.of(2011, 3, 22, 13, 0),
+    private static final BookingItemRequest BOOKING_ITEM_4 = new BookingItemRequest(LocalDateTime.of(2011, 3, 17, 10, 17, 6), LocalDateTime.of(2011, 3, 22, 13, 0),
                                                                       EMP_001, 2);
 
     private static final LocalDate FIRST_DATE = LocalDate.of(2011, 3, 21);
@@ -61,27 +62,27 @@ public class BookingControllerTest {
 
     @Test
     public void verifyLastApprovedBooking() {
-        when(persistenceService.getLastApprovedBooking()).thenReturn(new ApprovedBooking(asList(BOOKING_ITEM_0, BOOKING_ITEM_1)));
+        when(persistenceService.getLastApprovedBooking()).thenReturn(new ApprovedBooking(asList(new BookingItem(BOOKING_ITEM_0), new BookingItem(BOOKING_ITEM_1))));
 
         val lastBooking = getLastBooking();
 
         SortedMap<LocalDate, List<BookingItemResponse>> body = lastBooking.getBody().getResult();
 
         assertThat(body.keySet(), contains(FIRST_DATE));
-        assertThat(body.get(FIRST_DATE), contains(asList(equalsTo(new BookingItemResponse(BOOKING_ITEM_1)), equalsTo(new BookingItemResponse(BOOKING_ITEM_0)))));
+        assertThat(body.get(FIRST_DATE), contains(asList(equalsTo(new BookingItemResponse(new BookingItem(BOOKING_ITEM_1))), equalsTo(new BookingItemResponse(new BookingItem(BOOKING_ITEM_0))))));
     }
 
     @Test
     public void verifyGetApprovedBooking() {
         Long id = 1l;
-        when(persistenceService.getApprovedBooking(id)).thenReturn(new ApprovedBooking(asList(BOOKING_ITEM_0, BOOKING_ITEM_1)));
+        when(persistenceService.getApprovedBooking(id)).thenReturn(new ApprovedBooking(asList(new BookingItem(BOOKING_ITEM_0), new BookingItem(BOOKING_ITEM_1))));
 
         val bookingResponse = getBooking(id);
 
         SortedMap<LocalDate, List<BookingItemResponse>> body = bookingResponse.getBody().getResult();
 
         assertThat(body.keySet(), contains(FIRST_DATE));
-        assertThat(body.get(FIRST_DATE), contains(asList(equalsTo(new BookingItemResponse(BOOKING_ITEM_1)), equalsTo(new BookingItemResponse(BOOKING_ITEM_0)))));
+        assertThat(body.get(FIRST_DATE), contains(asList(equalsTo(new BookingItemResponse(new BookingItem(BOOKING_ITEM_1))), equalsTo(new BookingItemResponse(new BookingItem(BOOKING_ITEM_0))))));
     }
 
     @Test
@@ -90,12 +91,11 @@ public class BookingControllerTest {
 
         val bookingResponse = processBookings(bookingRequest);
 
-        SortedMap<LocalDate, List<BookingItemResponse>> body = bookingResponse.getBody()
-                                                                              .getResult();
+        SortedMap<LocalDate, List<BookingItemResponse>> body = bookingResponse.getBody().getResult();
 
         assertThat(body.keySet(), contains(FIRST_DATE, SECOND_DATE));
-        assertThat(body.get(FIRST_DATE), contains(asList(equalsTo(new BookingItemResponse(BOOKING_ITEM_1)), equalsTo(new BookingItemResponse(BOOKING_ITEM_0)))));
-        assertThat(body.get(SECOND_DATE), contains(asList(equalsTo(new BookingItemResponse(BOOKING_ITEM_2)), equalsTo(new BookingItemResponse(BOOKING_ITEM_4)))));
+        assertThat(body.get(FIRST_DATE), contains(asList(equalsTo(new BookingItemResponse(new BookingItem(BOOKING_ITEM_1))), equalsTo(new BookingItemResponse(new BookingItem(BOOKING_ITEM_0))))));
+        assertThat(body.get(SECOND_DATE), contains(asList(equalsTo(new BookingItemResponse(new BookingItem(BOOKING_ITEM_2))), equalsTo(new BookingItemResponse(new BookingItem(BOOKING_ITEM_4))))));
     }
 
     private ResponseEntity<BookingResponse> processBookings(BookingRequest bookingRequest) {

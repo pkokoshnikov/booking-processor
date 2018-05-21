@@ -1,8 +1,9 @@
 package com.pkokoshnikov.bookingservice.controller;
 
-import com.pkokoshnikov.bookingservice.model.ApprovedBooking;
-import com.pkokoshnikov.bookingservice.controller.model.request.BookingRequest;
-import com.pkokoshnikov.bookingservice.controller.model.response.BookingResponse;
+import com.pkokoshnikov.bookingservice.persistence.data.ApprovedBooking;
+import com.pkokoshnikov.bookingservice.controller.data.request.BookingRequest;
+import com.pkokoshnikov.bookingservice.controller.data.response.BookingResponse;
+import com.pkokoshnikov.bookingservice.persistence.data.BookingItem;
 import com.pkokoshnikov.bookingservice.service.BookingService;
 import com.pkokoshnikov.bookingservice.service.PersistenceService;
 import com.pkokoshnikov.bookingservice.util.Constants;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 import static com.pkokoshnikov.bookingservice.util.Constants.LAST_BOOKING_END_POINT;
 import static com.pkokoshnikov.bookingservice.util.Constants.PROCESS_END_POINT;
@@ -37,7 +40,12 @@ public class BookingController {
 
     @RequestMapping(value = PROCESS_END_POINT, method = RequestMethod.POST, produces = "application/json")
     public BookingResponse processBooking(@RequestBody BookingRequest bookingRequest) {
-        val filteredMeetings = bookingService.filterImpossibleMeetings(bookingRequest.getBookingItems(), bookingRequest.getStartOfWorkDay(), bookingRequest.getEndOfWorkDay());
+        val filteredMeetings = bookingService.filterImpossibleMeetings(bookingRequest.getBookingItemRequests()
+                                                                                     .stream()
+                                                                                     .map(BookingItem::new)
+                                                                                     .collect(Collectors.toList()),
+                                                                       bookingRequest.getStartOfWorkDay(),
+                                                                       bookingRequest.getEndOfWorkDay());
 
         val id = persistenceService.storeApprovedBookings(new ApprovedBooking(filteredMeetings));
 

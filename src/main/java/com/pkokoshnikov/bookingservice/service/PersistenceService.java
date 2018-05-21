@@ -1,6 +1,6 @@
 package com.pkokoshnikov.bookingservice.service;
 
-import com.pkokoshnikov.bookingservice.model.ApprovedBooking;
+import com.pkokoshnikov.bookingservice.persistence.data.ApprovedBooking;
 import lombok.NonNull;
 
 /**
